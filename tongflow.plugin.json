@@ -1,0 +1,8 @@
+{
+    "plugin": {
+        "name": "LeVo 2",
+        "description": "Lyrics-to-music song generation with LeVo 2 / SongGeneration — multilingual vocals plus accompaniment.",
+        "icon": "/plugins/tongflow-modal-levo.svg"
+    },
+    "env": []
+}
