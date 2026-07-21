@@ -50,7 +50,7 @@ app = modal.App(Path(__file__).resolve().parent.name)
 image = (
     modal.Image.debian_slim(python_version="3.10")
     .apt_install("git", "libsndfile1", "ffmpeg", "build-essential")
-    .pip_install("tongflow==0.2.1")
+    .pip_install("tongflow==0.2.13", "fastapi[standard]")
     .run_commands(
         f"git clone {REPO_URL} {REPO_DIR}",
         # Install pinned deps, but skip flash-attn/triton (built separately or
@@ -265,3 +265,18 @@ class Inference:
         except Exception as e:
             return GenMusicOutput(success=False, error=str(e))
         return GenMusicOutput(success=True, audio=asset(raw, mime="audio/flac"))
+
+    @modal.fastapi_endpoint(method="GET", label=f"{Path(__file__).resolve().parent.name}-serve")
+    def serve(self, taskId: str = "", token: str = "", origin: str = ""):
+        from fastapi.responses import StreamingResponse
+        from tongflow import serve_stream_from_spec
+
+        return StreamingResponse(
+            serve_stream_from_spec(
+                origin, taskId, token, __file__,
+                invoke=lambda m, inp: getattr(self, m).local(inp),
+            ),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "Access-Control-Allow-Origin": "*"},
+        )
+
