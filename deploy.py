@@ -134,7 +134,7 @@ _GEN_PARAMS = dict(
 @app.cls(
     scaledown_window=60,
     image=image,
-    gpu="L40S",
+    gpu="A100-80GB",
     volumes={"/models": volume},
     timeout=1800,
 )
