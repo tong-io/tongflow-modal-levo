@@ -50,7 +50,7 @@ app = modal.App(Path(__file__).resolve().parent.name)
 image = (
     modal.Image.debian_slim(python_version="3.10")
     .apt_install("git", "libsndfile1", "ffmpeg", "build-essential")
-    .pip_install("tongflow==0.2.13", "fastapi[standard]")
+    .pip_install("tongflow==0.2.16", "fastapi[standard]")
     .run_commands(
         f"git clone {REPO_URL} {REPO_DIR}",
         # Install pinned deps, but skip flash-attn/triton (built separately or
